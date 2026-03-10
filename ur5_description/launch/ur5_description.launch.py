@@ -25,8 +25,14 @@ def generate_launch_description():
         'robot_type',
         default_value='ur5.xacro',
     )
-
     arm_config  = LaunchConfiguration('robot_type')
+
+    controller_arg = DeclareLaunchArgument(
+        'controller',
+        default_value='position_control',
+        description='possible values: position_control, velocity_control'
+    )
+    controller  = LaunchConfiguration('controller')
 
     robot_description_pkg = FindPackageShare('ur5_description')
 
@@ -51,7 +57,7 @@ def generate_launch_description():
     parameters=[{
         'use_sim_time': use_sim_time,
         'robot_description': ParameterValue(
-            Command(['xacro', ' ', robot_model_path]),
+            Command(['xacro', ' ', robot_model_path,' ','controller:=', controller]),
             value_type=str
         )
     }]
@@ -73,6 +79,7 @@ def generate_launch_description():
     )
 
     ld = LaunchDescription()
+    ld.add_action(controller_arg)
     ld.add_action(use_sim_time_arg)
     ld.add_action(arm_config_arg)
     ld.add_action(robot_state_publisher_node)

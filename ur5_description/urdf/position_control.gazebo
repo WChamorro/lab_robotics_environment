@@ -1,0 +1,89 @@
+<robot>
+
+<gazebo>
+     <plugin
+        filename="gz-sim-joint-state-publisher-system"
+        name="gz::sim::systems::JointStatePublisher">
+        <topic>joint_states</topic>
+        <joint_name>shoulder_pan_joint</joint_name>
+        <joint_name>shoulder_lift_joint</joint_name>
+        <joint_name>elbow_joint</joint_name>
+        <joint_name>wrist_1_joint</joint_name>
+        <joint_name>wrist_2_joint</joint_name>
+        <joint_name>wrist_3_joint</joint_name>
+    </plugin>   
+ </gazebo>
+ 
+ <gazebo reference="base_link">
+  <static>true</static>
+</gazebo>
+
+
+
+<!-- Paso 1: ros2_control + posiciones iniciales por joint -->
+<ros2_control name="ArmSystem" type="system">
+  <hardware>
+    <!-- Para Gazebo Harmonic + gz_ros2_control -->
+    <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+  </hardware>
+
+  <joint name="shoulder_pan_joint">
+    <command_interface name="position"/>
+    <state_interface name="position">
+      <param name="initial_value">0.0</param>
+    </state_interface>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="shoulder_lift_joint">
+    <command_interface name="position"/>
+    <state_interface name="position">
+      <param name="initial_value">0.0</param>
+    </state_interface>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="elbow_joint">
+    <command_interface name="position"/>
+    <state_interface name="position">
+      <param name="initial_value">0.0</param>
+    </state_interface>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="wrist_1_joint">
+    <command_interface name="position"/>
+    <state_interface name="position">
+      <param name="initial_value">0.0</param>
+    </state_interface>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="wrist_2_joint">
+    <command_interface name="position"/>
+    <state_interface name="position">
+      <param name="initial_value">0.0</param>
+    </state_interface>
+    <state_interface name="velocity"/>
+  </joint>
+
+  <joint name="wrist_3_joint">
+    <command_interface name="position"/>
+    <state_interface name="position">
+      <param name="initial_value">0.0</param>
+    </state_interface>
+    <state_interface name="velocity"/>
+  </joint>
+
+</ros2_control>
+
+
+<gazebo>
+  <plugin name="gz_ros2_control::GazeboSimROS2ControlPlugin"
+        filename="libgz_ros2_control-system.so">
+    <parameters>$(find ur5_gazebo)/config/controllers_position.yaml</parameters>
+  </plugin>
+</gazebo>
+
+
+</robot>

@@ -1,7 +1,27 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ur5">  
+
+<xacro:arg name="controller" default="position_control"/>
+<xacro:property name="controller" value="$(arg controller)"/>
+
+<xacro:if value="${controller == 'position_control'}">
+  <xacro:include filename="$(find ur5_description)/urdf/position_control.gazebo"/>
+</xacro:if>
+
+<xacro:if value="${controller == 'velocity_control'}">
+  <xacro:include filename="$(find ur5_description)/urdf/velocity_control.gazebo"/>
+</xacro:if>
     
   <!-- links: main serial chain -->
+
+  <link name="world"/>
+
+<joint name="world_to_base" type="fixed">
+  <parent link="world"/>
+  <child link="base_link"/>
+  <origin xyz="0 0 0" rpy="0 0 0"/>
+</joint>
+
   <link name="base_link"/>
   <link name="base_link_inertia">
     <visual>
@@ -9,9 +29,7 @@
       <geometry>
         <mesh filename="file://$(find ur5_description)/meshes/ur5e/visual/base.dae"/>
       </geometry>
-      <material name="LightGrey">
-        <color rgba="0.7 0.7 0.7 1.0"/>
-      </material>
+   
     </visual>
     <collision>
       <origin rpy="0 0 3.141592653589793" xyz="0 0 0"/>
@@ -31,9 +49,7 @@
       <geometry>
         <mesh filename="file://$(find ur5_description)/meshes/ur5e/visual/shoulder.dae"/>
       </geometry>
-      <material name="LightGrey">
-        <color rgba="0.7 0.7 0.7 1.0"/>
-      </material>
+      
     </visual>
     <collision>
       <origin rpy="0 0 3.141592653589793" xyz="0 0 0"/>
@@ -53,9 +69,7 @@
       <geometry>
         <mesh filename="file://$(find ur5_description)/meshes/ur5e/visual/upperarm.dae"/>
       </geometry>
-      <material name="LightGrey">
-        <color rgba="0.7 0.7 0.7 1.0"/>
-      </material>
+     
     </visual>
     <collision>
       <origin rpy="1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0.138"/>
@@ -75,9 +89,7 @@
       <geometry>
         <mesh filename="file://$(find ur5_description)/meshes/ur5e/visual/forearm.dae"/>
       </geometry>
-      <material name="LightGrey">
-        <color rgba="0.7 0.7 0.7 1.0"/>
-      </material>
+      
     </visual>
     <collision>
       <origin rpy="1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0.007"/>
@@ -98,9 +110,7 @@
       <geometry>
         <mesh filename="file://$(find ur5_description)/meshes/ur5e/visual/wrist1.dae"/>
       </geometry>
-      <material name="LightGrey">
-        <color rgba="0.7 0.7 0.7 1.0"/>
-      </material>
+    
     </visual>
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 -0.127"/>
@@ -120,9 +130,7 @@
       <geometry>
         <mesh filename="file://$(find ur5_description)/meshes/ur5e/visual/wrist2.dae"/>
       </geometry>
-      <material name="LightGrey">
-        <color rgba="0.7 0.7 0.7 1.0"/>
-      </material>
+     
     </visual>
     <collision>
       <origin rpy="0 0 0" xyz="0 0 -0.0997"/>
@@ -142,9 +150,7 @@
       <geometry>
         <mesh filename="file://$(find ur5_description)/meshes/ur5e/visual/wrist3.dae"/>
       </geometry>
-      <material name="LightGrey">
-        <color rgba="0.7 0.7 0.7 1.0"/>
-      </material>
+     
     </visual>
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 -0.0989"/>
@@ -162,11 +168,6 @@
   <joint name="base_link-base_link_inertia" type="fixed">
     <parent link="base_link"/>
     <child link="base_link_inertia"/>
-    <!-- 'base_link' is REP-103 aligned (so X+ forward), while the internal
-           frames of the robot/controller have X+ pointing backwards.
-           Use the joint between 'base_link' and 'base_link_inertia' (a dummy
-           link/frame) to introduce the necessary rotation over Z (of pi rad).
-      -->
     <origin rpy="0 0 3.141592653589793" xyz="0 0 0"/>
   </joint>
   <joint name="shoulder_pan_joint" type="revolute">
@@ -244,4 +245,6 @@
     <parent link="flange"/>
     <child link="tool0"/>
   </joint>
+
+
 </robot>
